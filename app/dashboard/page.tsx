@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import DarkMode from "@/components/dark-mode";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import React, { useState } from "react";
-import HomeDash from "./(Components)/HomeDash";
+import HomeDash from "./(Components)/EventAdmin";
 import Hackthon from "./(Components)/Hackthon";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +24,8 @@ import { PopoverTrigger } from "@radix-ui/react-popover";
 import { cn } from "@/lib/utils";
 import { Calendar, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import CollageEvent from "./(Components)/collageEvent";
+import EventAdmin from "./(Components)/EventAdmin";
 
 export default function Dashboard() {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -37,10 +39,17 @@ export default function Dashboard() {
   const renderContent = () => {
     switch (selectedMenu) {
       case "Home":
-        return <HomeDash />;
+        return;
       case "Join Hackathon":
         return <Hackthon />;
-      // Add other cases as needed
+
+      case "Collage Event Update":
+        return <CollageEvent />;
+
+      case "Event Update":
+      // return <CollageEvent />;
+      case "Admin-Event":
+        return <EventAdmin />;
       default:
         return <HomeDash />;
     }
@@ -82,14 +91,14 @@ export default function Dashboard() {
 
   return (
     <div className="flex w-full h-screen">
-      <div>
+      <div className="bg-primary/5 dark:bg-[#030816]">
         <SidebarProvider>
           <AppSidebar onMenuClick={setSelectedMenu} />
           <SidebarTrigger />
         </SidebarProvider>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 bg-primary/5 dark:bg-[#030816] ">
         {/* Dark mode button fixed at top-right corner */}
         <div className="w-full h-full flex pt-3">
           <div className="absolute flex gap-3 top-3 right-16"></div>

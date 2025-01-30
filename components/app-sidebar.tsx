@@ -3,6 +3,7 @@
 import {
   BellPlus,
   Calendar,
+  EarthLock,
   Group,
   Home,
   Inbox,
@@ -21,9 +22,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { UserButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/clerk-react";
+import { useState, useEffect } from "react";
 
 // Menu items
-const items = [
+const defaultItems = [
   { title: "Home", url: "#", icon: Home },
   { title: "Join Hackathon", url: "#", icon: Laptop },
   { title: "Find RoomMate", url: "#", icon: Group },
@@ -36,6 +39,26 @@ export function AppSidebar({
 }: {
   onMenuClick: (title: string) => void;
 }) {
+  const { user } = useUser();
+  const [items, setItems] = useState(defaultItems);
+
+  // Use effect to add "Admin" menu item if the user is an admin
+  useEffect(() => {
+    if (user?.publicMetadata?.role === "Admin") {
+      setItems((prevItems) => {
+        // Check if "Admin" menu item already exists
+        if (!prevItems.some((item) => item.title === "Admin-Event")) {
+          console.log("User is an admin, adding Admin menu");
+          return [
+            ...prevItems,
+            { title: "Admin-Event", url: "#", icon: EarthLock },
+          ];
+        }
+        return prevItems; // Avoid unnecessary updates
+      });
+    }
+  }, [user]);
+
   return (
     <Sidebar className="flex flex-col h-full">
       <SidebarContent className="flex-grow">
@@ -65,7 +88,7 @@ export function AppSidebar({
         <SidebarMenuButton asChild>
           <button
             onClick={() => onMenuClick("Settings")}
-            className="flex  gap-2 mt-auto items-center mb-5"
+            className="flex gap-2 mt-auto items-center mb-5"
           >
             <Settings />
             <span>Settings</span>

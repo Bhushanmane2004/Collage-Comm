@@ -1,6 +1,15 @@
 "use client"; // Ensure this line is present at the top
 
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import {
+  BellPlus,
+  Calendar,
+  Group,
+  Home,
+  Inbox,
+  Laptop,
+  Search,
+  Settings,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,14 +20,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { UserButton } from "@clerk/nextjs";
 
 // Menu items
 const items = [
   { title: "Home", url: "#", icon: Home },
-  { title: "Inbox", url: "#", icon: Inbox },
-  { title: "Calendar", url: "#", icon: Calendar },
-  { title: "Search", url: "#", icon: Search },
-  { title: "Settings", url: "#", icon: Settings },
+  { title: "Join Hackathon", url: "#", icon: Laptop },
+  { title: "Find RoomMate", url: "#", icon: Group },
+  { title: "Collage Event Update", url: "#", icon: Calendar },
+  { title: "Event Update", url: "#", icon: BellPlus },
 ];
 
 export function AppSidebar({
@@ -27,16 +37,19 @@ export function AppSidebar({
   onMenuClick: (title: string) => void;
 }) {
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className="flex flex-col h-full">
+      <SidebarContent className="flex-grow">
         <SidebarGroup>
           <SidebarGroupLabel>Next App</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="flex-grow">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <button onClick={() => onMenuClick(item.title)}>
+                    <button
+                      onClick={() => onMenuClick(item.title)}
+                      className="flex items-center gap-2"
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </button>
@@ -46,6 +59,18 @@ export function AppSidebar({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+      </SidebarContent>
+      <SidebarContent>
+        <UserButton />
+        <SidebarMenuButton asChild>
+          <button
+            onClick={() => onMenuClick("Settings")}
+            className="flex  gap-2 mt-auto items-center mb-5"
+          >
+            <Settings />
+            <span>Settings</span>
+          </button>
+        </SidebarMenuButton>
       </SidebarContent>
     </Sidebar>
   );

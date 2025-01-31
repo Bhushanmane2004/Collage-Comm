@@ -28,6 +28,7 @@ import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast, Toaster } from "sonner";
+import { Id } from "@/convex/_generated/dataModel";
 
 function HomeDash() {
   const { user } = useUser();
@@ -38,6 +39,9 @@ function HomeDash() {
   const [creatorId, setCreatorId] = useState<string>("");
   const [showRequests, setShowRequests] = useState(false);
   const [viewMode, setViewMode] = useState<"all" | "my">("all");
+  const [selectedGroupId, setSelectedGroupId] = useState<Id<"groups"> | null>(
+    null
+  );
 
   const create = useMutation(api.document.createHackathonGroup);
   const hackathons = useQuery(api.document.getAllOngoingHackathons);
@@ -46,6 +50,13 @@ function HomeDash() {
   });
   const approveRequest = useMutation(api.document.approveGroupRequest);
   const requestToJoin = useMutation(api.document.requestToJoinGroup);
+  const groupMembers = useQuery(
+    api.document.getGroupMembers,
+    selectedGroupId ? { groupId: selectedGroupId } : "skip"
+  );
+  function onclick() {
+    console.log(groupMembers);
+  }
 
   useEffect(() => {
     if (user) {
@@ -249,12 +260,52 @@ function HomeDash() {
                     </div>
 
                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md">
-                        <Users className="h-4 w-4" />
-                        <span>
-                          {hackathon.memberCount}/{hackathon.maxMembers} members
-                        </span>
-                      </div>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                            onClick={() => setSelectedGroupId(hackathon._id)}
+                          >
+                            <Users className="h-4 w-4" />
+                            <span>
+                              {hackathon.memberCount}/{hackathon.maxMembers}{" "}
+                              members
+                            </span>
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Members - {hackathon.groupName}
+                            </AlertDialogTitle>
+                            <div className="mt-2">
+                              {groupMembers?.success && groupMembers.members ? (
+                                <ul className="space-y-1">
+                                  {groupMembers.members.map(
+                                    (memberId, index) => (
+                                      <li
+                                        key={index}
+                                        className="text-sm text-gray-600 dark:text-gray-300"
+                                      >
+                                        {index + 1}. {memberId}
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              ) : (
+                                <p className="text-sm text-muted-foreground">
+                                  No members to display.
+                                </p>
+                              )}
+                            </div>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Close</AlertDialogCancel>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                       <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md">
                         <CalendarIcon2 className="h-4 w-4" />
                         <span>

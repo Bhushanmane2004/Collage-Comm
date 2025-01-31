@@ -88,4 +88,16 @@ export default defineSchema({
     .index("by_type", ["type"])
     .index("by_date", ["startDate"])
     .index("by_created", ["createdAt"]),
+  flatProfiles: defineTable({
+    houseName: v.string(),
+    address: v.string(),
+    totalRent: v.number(),
+    maxOccupancy: v.number(),
+    location: v.string(),
+    distanceFromCollege: v.number(),
+    hasWifi: v.boolean(),
+    hasGeyser: v.boolean(),
+    hasParking: v.boolean(),
+    allowsGuests: v.boolean(),
+  }),
 });

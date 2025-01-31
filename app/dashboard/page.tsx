@@ -27,6 +27,7 @@ import { format } from "date-fns";
 import CollageEvent from "./(Components)/collageEvent";
 import EventAdmin from "./(Components)/EventAdmin";
 import Test from "./(Components)/test";
+import FlatProfile from "./(Components)/flat-profile";
 
 export default function Dashboard() {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -40,9 +41,11 @@ export default function Dashboard() {
   const renderContent = () => {
     switch (selectedMenu) {
       case "Home":
-        return;
+        return <></>;
       case "Join Hackathon":
         return <Hackthon />;
+      case "Find RoomMate":
+        return <FlatProfile />;
 
       case "Collage Event Update":
         return <CollageEvent />;

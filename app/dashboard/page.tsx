@@ -28,6 +28,7 @@ import CollageEvent from "./(Components)/collageEvent";
 import EventAdmin from "./(Components)/EventAdmin";
 import Test from "./(Components)/test";
 import FlatProfile from "./(Components)/flat-profile";
+import HomePage from "./(Components)/Homepage";
 
 export default function Dashboard() {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -41,7 +42,7 @@ export default function Dashboard() {
   const renderContent = () => {
     switch (selectedMenu) {
       case "Home":
-        return <></>;
+        return <HomePage />;
       case "Join Hackathon":
         return <Hackthon />;
       case "Find RoomMate":
@@ -102,7 +103,7 @@ export default function Dashboard() {
         </SidebarProvider>
       </div>
 
-      <div className="flex-1 bg-primary/5 dark:bg-[#030816] ">
+      <div className="flex-1  bg-primary/5 dark:bg-[#030816] ">
         {/* Dark mode button fixed at top-right corner */}
         <div className="w-full h-full flex pt-3">
           <div className="absolute flex gap-3 top-3 right-16"></div>

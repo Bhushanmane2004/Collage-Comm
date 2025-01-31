@@ -1,112 +1,131 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { SignedOut, SignedIn, SignInButton, useAuth } from "@clerk/nextjs";
-import { ArrowRight } from "lucide-react";
-import Image from "next/image";
-import { useEffect } from "react";
+import { SignedOut, SignedIn, SignInButton } from "@clerk/nextjs";
+import { ArrowRight, Users, Calendar } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
+    if (!isLoaded) return;
     if (isSignedIn) {
+      setIsRedirecting(true);
       router.push("/dashboard");
     }
-  }, [isSignedIn, router]);
+  }, [isSignedIn, isLoaded, router]);
+
+  if (isRedirecting) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg">Loading dashboard...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        {/* <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        /> */}
-        <Button variant="ghost" className="">
-          Error 404
-        </Button>
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">CampusConnect</h1>
           <SignedOut>
             <SignInButton mode="modal">
-              <Button>
-                Join Error 404 for free
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
+              <Button variant="outline">Sign In</Button>
             </SignInButton>
           </SignedOut>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
         </div>
+      </header>
+
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="py-20 text-center bg-gradient-to-b from-primary/20 to-background">
+          <div className="container mx-auto px-4">
+            <h1 className="text-5xl font-bold mb-6">
+              Find Your Perfect College Match
+            </h1>
+            <p className="text-lg text-muted-foreground mb-8">
+              Connect with roommates, discover hackathon teams, and join campus
+              events - all in one place.
+            </p>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button size="lg" className="gap-2">
+                  Get Started <ArrowRight className="w-4 h-4" />
+                </Button>
+              </SignInButton>
+            </SignedOut>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-20 container mx-auto grid md:grid-cols-3 p-5  gap-8">
+          {features.map(({ title, description, icon: Icon, color }, index) => (
+            <Card key={index} className="shadow-lg hover:shadow-xl transition">
+              <CardHeader className="flex items-center gap-4">
+                <Icon className={cn("w-10 h-10", color)} />
+                <CardTitle>{title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-muted text-center">
+          <div className="container mx-auto">
+            <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Join thousands of students already using CampusConnect
+            </p>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button size="lg" className="gap-2">
+                  Sign Up Now <ArrowRight className="w-4 h-4" />
+                </Button>
+              </SignInButton>
+            </SignedOut>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to Error404 .org →
-        </a>
+
+      <footer className="border-t py-8 text-center">
+        <div className="container mx-auto">
+          <p>© 2025 CampusConnect. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );
 }
+
+const features = [
+  {
+    title: "Find Roommates",
+    description:
+      "Match with compatible roommates based on your lifestyle and campus location.",
+    icon: Users,
+    color: "text-green-500",
+  },
+  {
+    title: "Hackathon Teams",
+    description:
+      "Join or create hackathon teams, showcase your skills, and collaborate on projects.",
+    icon: Users,
+    color: "text-blue-500",
+  },
+  {
+    title: "Campus Events",
+    description:
+      "Stay updated with the latest campus events, workshops, and networking opportunities.",
+    icon: Calendar,
+    color: "text-purple-500",
+  },
+];

@@ -64,6 +64,7 @@ export default defineSchema({
     maxParticipants: v.number(),
     currentParticipants: v.number(),
     registeredUsers: v.array(v.string()),
+    registeredUsersName: v.array(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
     attachments: v.optional(v.array(v.string())),

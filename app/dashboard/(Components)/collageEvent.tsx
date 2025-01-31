@@ -10,11 +10,13 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { toast, Toaster } from "sonner";
 
 const OngoingEvents = () => {
   const { user } = useUser();
   const userId = user?.id;
   const [message, setMessage] = useState("");
+  const userFullName = user?.fullName || "Any"; // Corrected variable name
 
   // Fetch ongoing events with proper error handling
   const ongoingEvents = useQuery(api.document.getOngoingAndUpcomingEvents) ?? {
@@ -24,7 +26,7 @@ const OngoingEvents = () => {
   console.log(ongoingEvents.events);
 
   // Function to format date
-  const formatDate = (timestamp) => {
+  const formatDate = (timestamp: string | number | Date) => {
     return new Date(timestamp).toLocaleString("en-US", {
       dateStyle: "medium",
       timeStyle: "short",
@@ -35,6 +37,7 @@ const OngoingEvents = () => {
   const handleRegister = async (eventId) => {
     if (!userId) {
       setMessage("Please login to register for events");
+      toast.error("Please login to register for events");
       return;
     }
 
@@ -42,10 +45,18 @@ const OngoingEvents = () => {
       await registerEvent({
         eventId,
         userId,
+        userFullName, // Corrected variable name
       });
       setMessage("Successfully registered for the event!");
+      toast.success("Successfully registered for the event!");
     } catch (error) {
-      setMessage(error.message || "Failed to register for event");
+      if (error instanceof Error) {
+        setMessage(error.message || "Failed to register for event");
+        toast.error("Failed to register for event");
+      } else {
+        setMessage("Failed to register for event");
+        toast.error("Failed to register for event");
+      }
     }
 
     // Clear message after 3 seconds
@@ -67,17 +78,19 @@ const OngoingEvents = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Ongoing Events</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-primary/100">
+          Ongoing Events
+        </h1>
+        <p className="text-gray-600 mt-2 dark:text-primary/50">
           Browse and register for current events
         </p>
       </div>
-
+      {/* 
       {message && (
         <div className="mb-6 p-4 rounded-lg bg-blue-50 text-blue-700">
           {message}
         </div>
-      )}
+      )} */}
 
       {events.length === 0 ? (
         <div className="text-center p-8 bg-gray-50 rounded-lg">

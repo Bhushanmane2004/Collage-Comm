@@ -1,6 +1,8 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { useUser } from "@clerk/clerk-react";
+import { env } from "process";
+import exp from "constants";
 
 // ✅ Create a new hackathon group
 export const createHackathonGroup = mutation({
@@ -32,6 +34,11 @@ export const createHackathonGroup = mutation({
       throw new Error("Failed to create group");
     }
   },
+});
+
+export const getMemeberDetils = query({
+  args: {},
+  handler: async (ctx, args) => {},
 });
 
 export const getAllOngoingHackathons = query({
@@ -187,7 +194,8 @@ export const createCollegeEvent = mutation({
         type: args.type,
         maxParticipants: args.maxParticipants,
         currentParticipants: 0, // Start with 0 participants
-        registeredUsers: [], // Start with empty array
+        registeredUsers: [],
+        registeredUsersName: [], // Start with empty array
         createdAt: Date.now(),
         updatedAt: Date.now(),
         organizer: args.organizer,
@@ -231,11 +239,29 @@ export const getEventsByStatus = query({
   },
 });
 
+export const getGroupMembers = query({
+  args: {
+    groupId: v.id("groups"),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const group = await ctx.db.get(args.groupId);
+      if (!group) throw new Error("Group not found");
+
+      return { success: true, members: group.approvedMembers };
+    } catch (error) {
+      console.error("Error fetching group members:", error);
+      return { success: false, error: "Failed to fetch members" };
+    }
+  },
+});
+
 // ✅ Register for an event
 export const registerForEvent = mutation({
   args: {
     eventId: v.id("sema"),
     userId: v.string(),
+    userFullName: v.string(), // Add userFullName to the arguments
   },
   handler: async (ctx, args) => {
     const event = await ctx.db.get(args.eventId);
@@ -251,6 +277,7 @@ export const registerForEvent = mutation({
 
     await ctx.db.patch(args.eventId, {
       registeredUsers: [...event.registeredUsers, args.userId],
+      registeredUsersName: [...event.registeredUsersName, args.userFullName], // Use userFullName here
       currentParticipants: event.currentParticipants + 1,
       updatedAt: Date.now(),
     });
@@ -388,5 +415,22 @@ export const updateCollegeEvent = mutation({
       console.error("Error updating event:", error);
       throw new Error("Failed to update event");
     }
+  },
+});
+
+export const getRegisteredUserNames = query({
+  args: {
+    eventId: v.id("sema"), // Expecting the event ID as an argument
+  },
+  handler: async (ctx, args) => {
+    // Fetch the event from the database using the eventId
+    const event = await ctx.db.get(args.eventId);
+
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    // Return the list of user names of the registered users
+    return { registeredUserNames: event.registeredUsersName };
   },
 });

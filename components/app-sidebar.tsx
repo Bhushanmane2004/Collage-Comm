@@ -84,7 +84,9 @@ export function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarContent>
-        <UserButton />
+        <div>
+          <UserButton />
+        </div>
         <SidebarMenuButton asChild>
           <button
             onClick={() => onMenuClick("Settings")}

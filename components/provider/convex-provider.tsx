@@ -30,7 +30,7 @@ export const ConvexClientProvider = ({ children }: { children: ReactNode }) => {
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
     >
       <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
-        <AuthCheck>{children}</AuthCheck> {/* Add authentication check */}
+        <AuthCheck>{children}</AuthCheck> {/* Enforce authentication */}
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );
@@ -42,20 +42,28 @@ const AuthCheck = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && isSignedIn && user) {
-      const email = user.primaryEmailAddress?.emailAddress || "";
-      if (!email.endsWith("@viit.ac.in")) {
-        alert("Access Denied: Only VIIT students can log in.");
-        signOut(); // Force logout
-        router.push("/"); // Redirect unauthorized users
+    if (typeof window !== "undefined") {
+      const isLocalhost = window.location.hostname === "localhost";
+
+      if (!isLocalhost && isLoaded && isSignedIn && user) {
+        const email = user.primaryEmailAddress?.emailAddress || "";
+        if (!email.endsWith("@viit.ac.in")) {
+          alert("Access Denied: Only VIIT students can log in.");
+          signOut(); // Force logout
+          router.push("/"); // Redirect unauthorized users
+        }
       }
     }
   }, [isSignedIn, isLoaded, user, router, signOut]);
 
   if (!isLoaded) return null; // Prevent rendering before auth loads
 
-  return isSignedIn &&
-    user?.primaryEmailAddress?.emailAddress.endsWith("@viit.ac.in") ? (
+  const isLocalhost =
+    typeof window !== "undefined" && window.location.hostname === "localhost";
+
+  return isLocalhost ||
+    (isSignedIn &&
+      user?.primaryEmailAddress?.emailAddress.endsWith("@viit.ac.in")) ? (
     children
   ) : (
     <RedirectToSignIn />

@@ -7,6 +7,16 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const EventAdmin = () => {
   const { user } = useUser();
@@ -18,6 +28,20 @@ const EventAdmin = () => {
   const [editingEventId, setEditingEventId] = useState<Id<"sema"> | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [message, setMessage] = useState("");
+  const [showParticipants, setShowParticipants] = useState(false); // State for showing participants
+  const [selectedEventId, setSelectedEventId] = useState<Id<"sema"> | null>(
+    null
+  ); // Track selected event ID
+
+  // Fetch participants when an event is selected
+  const getparName = useQuery(
+    api.document.getRegisteredUserNames,
+    selectedEventId ? { eventId: selectedEventId } : "skip" // Skip the query if selectedEventId is null
+  );
+  function onClick() {
+    console.log("clicked");
+    console.log(getparName?.registeredUserNames);
+  }
 
   // Form state
   const [formData, setFormData] = useState<{
@@ -178,6 +202,7 @@ const EventAdmin = () => {
             <h1 className="text-2xl font-bold">
               {editingEventId ? "Edit Event" : "Event Management"}
             </h1>
+            <h1>{getparName?.registeredUserNames}</h1>
             <Button
               onClick={() => {
                 setShowForm(!showForm);
@@ -425,12 +450,6 @@ const EventAdmin = () => {
                           size="sm"
                         >
                           Edit
-                        </Button>
-
-                        {/* Add 'Show Participants' button here */}
-                        <Button variant="outline" size="sm">
-                          {" "}
-                          Show Paricipants
                         </Button>
                       </div>
                     </div>

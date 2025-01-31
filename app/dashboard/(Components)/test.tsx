@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-const EventAdmin = () => {
+const test = () => {
   const { user } = useUser();
   const userRole = user?.publicMetadata?.role;
   const createEvent = useMutation(api.document.createCollegeEvent);
@@ -27,7 +27,9 @@ const EventAdmin = () => {
   const { toast } = useToast();
   const [editingEventId, setEditingEventId] = useState<Id<"sema"> | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [selectedEventId, setSelectedEventId] = useState<Id<"sema"> | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<Id<"sema"> | null>(
+    null
+  );
 
   // Fetch participants when an event is selected
   const participantsQuery = useQuery(
@@ -120,7 +122,10 @@ const EventAdmin = () => {
         organizer: formData.organizer,
         contactInfo: formData.contactInfo,
         category: formData.category,
-        tags: formData.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
+        tags: formData.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
         attachments: formData.attachments
           .split(",")
           .map((url) => url.trim())
@@ -308,4 +313,4 @@ const EventAdmin = () => {
   );
 };
 
-export default EventAdmin;
+export default test;

@@ -1,4 +1,4 @@
-"use client"; // Ensure this line is present at the top
+"use client";
 
 import {
   BellPlus,
@@ -6,9 +6,7 @@ import {
   EarthLock,
   Group,
   Home,
-  Inbox,
   Laptop,
-  Search,
   Settings,
 } from "lucide-react";
 import {
@@ -25,7 +23,6 @@ import { UserButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 
-// Menu items
 const defaultItems = [
   { title: "Home", url: "#", icon: Home },
   { title: "Join Hackathon", url: "#", icon: Laptop },
@@ -42,11 +39,9 @@ export function AppSidebar({
   const { user } = useUser();
   const [items, setItems] = useState(defaultItems);
 
-  // Use effect to add "Admin" menu item if the user is an admin
   useEffect(() => {
     if (user?.publicMetadata?.role === "Admin") {
       setItems((prevItems) => {
-        // Check if "Admin" menu item already exists
         if (!prevItems.some((item) => item.title === "Admin-Event")) {
           console.log("User is an admin, adding Admin menu");
           return [
@@ -54,18 +49,23 @@ export function AppSidebar({
             { title: "Admin-Event", url: "#", icon: EarthLock },
           ];
         }
-        return prevItems; // Avoid unnecessary updates
+        return prevItems;
       });
     }
   }, [user]);
 
   return (
     <Sidebar className="flex flex-col h-full">
+      {/* User button at top */}
+      <div className="p-4">
+        <UserButton afterSignOutUrl="/" />
+      </div>
+
       <SidebarContent className="flex-grow">
         <SidebarGroup>
-          <SidebarGroupLabel>Next App</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xl">Error 404 </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="flex-grow">
+            <SidebarMenu className="flex-grow m-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -83,14 +83,12 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarContent>
-        <div>
-          <UserButton />
-        </div>
         <SidebarMenuButton asChild>
           <button
             onClick={() => onMenuClick("Settings")}
-            className="flex gap-2 mt-auto items-center mb-5"
+            className="flex gap-2 items-center mb-5 mt-auto"
           >
             <Settings />
             <span>Settings</span>

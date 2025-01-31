@@ -43,6 +43,10 @@ const EventAdmin = () => {
     console.log(getparName?.registeredUserNames);
   }
 
+  const participantsQuery = useQuery(
+    api.document.getRegisteredUserNames,
+    selectedEventId ? { eventId: selectedEventId } : "skip"
+  );
   // Form state
   const [formData, setFormData] = useState<{
     title: string;
@@ -202,7 +206,6 @@ const EventAdmin = () => {
             <h1 className="text-2xl font-bold">
               {editingEventId ? "Edit Event" : "Event Management"}
             </h1>
-            <h1>{getparName?.registeredUserNames}</h1>
             <Button
               onClick={() => {
                 setShowForm(!showForm);
@@ -442,6 +445,46 @@ const EventAdmin = () => {
                         <p className="text-sm text-gray-500">
                           Status: {event.status || "pending"}
                         </p>
+                      </div>
+                      <div className="flex items-center space-x-2 ml-auto mr-5">
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              onClick={() => setSelectedEventId(event._id)}
+                              variant="outline"
+                              size="sm"
+                            >
+                              View Participants
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Participants - {event.title}
+                              </AlertDialogTitle>
+                              <div className="mt-2">
+                                {participantsQuery?.registeredUserNames ? (
+                                  <ul className="space-y-1">
+                                    {participantsQuery.registeredUserNames.map(
+                                      (name, index) => (
+                                        <li key={index} className="text-sm">
+                                          {index + 1}. {name}
+                                        </li>
+                                      )
+                                    )}
+                                  </ul>
+                                ) : (
+                                  <p className="text-sm text-muted-foreground">
+                                    No participants registered yet.
+                                  </p>
+                                )}
+                              </div>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Close</AlertDialogCancel>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                       <div className="flex items-center space-x-4">
                         <Button

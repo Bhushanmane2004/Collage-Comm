@@ -123,13 +123,13 @@ function HomeDash() {
           <AlertDialogTrigger asChild>
             <Button
               variant="default"
-              className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              className="gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md"
             >
               <CalendarIcon className="h-4 w-4" />
               Create Hackathon
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="sm:max-w-[425px] rounded-lg">
+          <AlertDialogContent className="sm:max-w-[425px]">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 Create New Hackathon
@@ -143,14 +143,14 @@ function HomeDash() {
                 placeholder="Hackathon Name"
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
-                className="w-full rounded-lg"
+                className="w-full"
                 required
               />
               <Input
                 placeholder="Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-lg"
+                className="w-full"
                 required
               />
               <div className="flex gap-4">
@@ -161,7 +161,7 @@ function HomeDash() {
                   onChange={(e) => setMaxMembers(parseInt(e.target.value))}
                   min={2}
                   max={10}
-                  className="w-1/2 rounded-lg"
+                  className="w-1/2"
                   required
                 />
                 <Popover>
@@ -169,7 +169,7 @@ function HomeDash() {
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-1/2 justify-start text-left font-normal rounded-lg",
+                        "w-1/2 justify-start text-left font-normal",
                         !date && "text-muted-foreground"
                       )}
                     >
@@ -177,10 +177,7 @@ function HomeDash() {
                       {date ? format(date, "PPP") : <span>Select date</span>}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto p-0 rounded-lg"
-                    align="start"
-                  >
+                  <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={date}
@@ -192,13 +189,11 @@ function HomeDash() {
               </div>
             </div>
             <AlertDialogFooter>
-              <AlertDialogCancel className="rounded-lg">
-                Cancel
-              </AlertDialogCancel>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleSubmit}
                 disabled={!groupName || !description || !date}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg"
+                className="bg-blue-600 text-white hover:bg-blue-700"
               >
                 Create Hackathon
               </AlertDialogAction>
@@ -207,14 +202,13 @@ function HomeDash() {
         </AlertDialog>
       </div>
 
-      {/* View Mode Tabs */}
       <div className="flex gap-4 mb-8">
         <Button
           variant={viewMode === "all" ? "default" : "outline"}
           onClick={() => setViewMode("all")}
-          className={`rounded-full px-6 transition-all ${
+          className={`px-6 ${
             viewMode === "all"
-              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+              ? "bg-blue-600 text-white hover:bg-blue-700"
               : "hover:bg-gray-100 dark:hover:bg-gray-800"
           }`}
         >
@@ -223,9 +217,9 @@ function HomeDash() {
         <Button
           variant={viewMode === "my" ? "default" : "outline"}
           onClick={() => setViewMode("my")}
-          className={`rounded-full px-6 transition-all ${
+          className={`px-6 ${
             viewMode === "my"
-              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+              ? "bg-blue-600 text-white hover:bg-blue-700"
               : "hover:bg-gray-100 dark:hover:bg-gray-800"
           }`}
         >
@@ -233,20 +227,16 @@ function HomeDash() {
         </Button>
       </div>
 
-      {/* Content Section */}
-      {viewMode === "all" ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {hackathons?.success ? (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {viewMode === "all" ? (
+          hackathons?.success ? (
             hackathons.hackathons.length > 0 ? (
               hackathons.hackathons.map((hackathon) => (
                 <div
                   key={hackathon._id}
-                  className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700"
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-10 blur-2xl group-hover:opacity-20 transition-opacity duration-300" />
-
-                  <div className="relative p-6">
+                  <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
@@ -259,13 +249,13 @@ function HomeDash() {
                     </div>
 
                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                      <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md">
                         <Users className="h-4 w-4" />
                         <span>
                           {hackathon.memberCount}/{hackathon.maxMembers} members
                         </span>
                       </div>
-                      <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                      <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md">
                         <CalendarIcon2 className="h-4 w-4" />
                         <span>
                           {format(new Date(hackathon.createdAt), "PP")}
@@ -279,7 +269,7 @@ function HomeDash() {
                           <Button
                             variant="default"
                             size="sm"
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg"
+                            className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                             onClick={() => handleJoinRequest(hackathon._id)}
                             disabled={
                               hackathon.memberCount >= hackathon.maxMembers ||
@@ -298,7 +288,7 @@ function HomeDash() {
               ))
             ) : (
               <div className="col-span-full text-center py-12">
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-8">
+                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-8">
                   <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
                     No ongoing hackathons available.
                   </p>
@@ -310,116 +300,106 @@ function HomeDash() {
             )
           ) : (
             <div className="col-span-full text-center py-12">
-              <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-8">
+              <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-8">
                 <p className="text-red-600 dark:text-red-400">
                   Error fetching hackathons.
                 </p>
               </div>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {myHackathons?.success ? (
-            myHackathons.myHackathons.length > 0 ? (
-              myHackathons.myHackathons.map((hackathon) => (
-                <div
-                  key={hackathon._id}
-                  className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-10 blur-2xl group-hover:opacity-20 transition-opacity duration-300" />
-
-                  <div className="relative p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
-                          {hackathon.groupName}
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-300 line-clamp-2">
-                          {hackathon.description}
-                        </p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                        onClick={() => setShowRequests(!showRequests)}
-                      >
-                        <Settings className="h-4 w-4" />
-                      </Button>
+          )
+        ) : myHackathons?.success ? (
+          myHackathons.myHackathons.length > 0 ? (
+            myHackathons.myHackathons.map((hackathon) => (
+              <div
+                key={hackathon._id}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700"
+              >
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                        {hackathon.groupName}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300 line-clamp-2">
+                        {hackathon.description}
+                      </p>
                     </div>
-
-                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
-                        <Users className="h-4 w-4" />
-                        <span>
-                          {hackathon.memberCount}/{hackathon.maxMembers} members
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
-                        <CalendarIcon2 className="h-4 w-4" />
-                        <span>
-                          {format(new Date(hackathon.createdAt), "PP")}
-                        </span>
-                      </div>
-                    </div>
-
-                    {showRequests &&
-                      hackathon.pendingMembers &&
-                      hackathon.pendingMembers.length > 0 && (
-                        <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <h4 className="text-sm font-medium mb-2 text-gray-900 dark:text-gray-100">
-                            Pending Requests
-                          </h4>
-                          {hackathon.pendingMembers.map((userId) => (
-                            <div
-                              key={userId}
-                              className="flex items-center justify-between py-1"
-                            >
-                              <span className="text-sm text-gray-600 dark:text-gray-300">
-                                {userId}
-                              </span>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() =>
-                                  handleApproveRequest(hackathon._id, userId)
-                                }
-                                className="rounded-lg"
-                              >
-                                Approve
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                      onClick={() => setShowRequests(!showRequests)}
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
                   </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-8">
-                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
-                    You haven't created any hackathons yet.
-                  </p>
-                  <p className="text-gray-400 dark:text-gray-500">
-                    Create your first hackathon using the button above!
-                  </p>
+
+                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md">
+                      <Users className="h-4 w-4" />
+                      <span>
+                        {hackathon.memberCount}/{hackathon.maxMembers} members
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md">
+                      <CalendarIcon2 className="h-4 w-4" />
+                      <span>{format(new Date(hackathon.createdAt), "PP")}</span>
+                    </div>
+                  </div>
+
+                  {showRequests &&
+                    hackathon.pendingMembers &&
+                    hackathon.pendingMembers.length > 0 && (
+                      <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
+                        <h4 className="text-sm font-medium mb-2 text-gray-900 dark:text-gray-100">
+                          Pending Requests
+                        </h4>
+                        {hackathon.pendingMembers.map((userId) => (
+                          <div
+                            key={userId}
+                            className="flex items-center justify-between py-1"
+                          >
+                            <span className="text-sm text-gray-600 dark:text-gray-300">
+                              {userId}
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleApproveRequest(hackathon._id, userId)
+                              }
+                            >
+                              Approve
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                 </div>
               </div>
-            )
+            ))
           ) : (
             <div className="col-span-full text-center py-12">
-              <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-8">
-                <p className="text-red-600 dark:text-red-400">
-                  Error fetching your hackathons.
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-8">
+                <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
+                  You haven't created any hackathons yet.
+                </p>
+                <p className="text-gray-400 dark:text-gray-500">
+                  Create your first hackathon using the button above!
                 </p>
               </div>
             </div>
-          )}
-        </div>
-      )}
+          )
+        ) : (
+          <div className="col-span-full text-center py-12">
+            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-8">
+              <p className="text-red-600 dark:text-red-400">
+                Error fetching your hackathons.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -26,6 +26,7 @@ import { Calendar, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import CollageEvent from "./(Components)/collageEvent";
 import EventAdmin from "./(Components)/EventAdmin";
+import Test from "./(Components)/test";
 
 export default function Dashboard() {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -47,7 +48,7 @@ export default function Dashboard() {
         return <CollageEvent />;
 
       case "Event Update":
-      // return <CollageEvent />;
+        return <Test />;
       case "Admin-Event":
         return <EventAdmin />;
       default:

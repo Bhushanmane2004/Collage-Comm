@@ -28,7 +28,6 @@ const defaultItems = [
   { title: "Join Hackathon", url: "#", icon: Laptop },
   { title: "Find RoomMate", url: "#", icon: Group },
   { title: "Collage Event Update", url: "#", icon: Calendar },
-  { title: "Event Update", url: "#", icon: BellPlus },
 ];
 
 export function AppSidebar({

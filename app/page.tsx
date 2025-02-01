@@ -34,7 +34,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">CampusConnect</h1>
+          <h1 className="text-2xl font-bold">Error 404</h1>
           <SignedOut>
             <SignInButton mode="modal">
               <Button variant="outline">Sign In</Button>
@@ -99,7 +99,7 @@ export default function Home() {
 
       <footer className="border-t py-8 text-center">
         <div className="container mx-auto">
-          <p>© 2025 CampusConnect. All rights reserved.</p>
+          <p>© 2025 Error 404. All rights reserved.</p>
         </div>
       </footer>
     </div>

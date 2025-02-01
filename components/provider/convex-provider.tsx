@@ -8,6 +8,7 @@ import {
   useAuth,
   useUser,
   RedirectToSignIn,
+  SignedOut,
 } from "@clerk/clerk-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -15,7 +16,7 @@ import { useRouter } from "next/navigation";
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export const ConvexClientProvider = ({ children }: { children: ReactNode }) => {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
   const [actualTheme, setActualTheme] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export const ConvexClientProvider = ({ children }: { children: ReactNode }) => {
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
     >
       <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
-        <AuthCheck>{children}</AuthCheck> {/* Enforce authentication */}
+        <AuthCheck>{children}</AuthCheck>
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );
@@ -47,19 +48,33 @@ const AuthCheck = ({ children }: { children: ReactNode }) => {
 
       if (!isLocalhost && isLoaded && isSignedIn && user) {
         const email = user.primaryEmailAddress?.emailAddress || "";
+        console.log("User Email:", email); // Debugging
+
         if (!email.endsWith("@viit.ac.in")) {
-          alert("Access Denied: Only VIIT students can log in.");
-          signOut(); // Force logout
-          router.push("/"); // Redirect unauthorized users
+          setTimeout(() => {
+            alert("Access Denied: Only VIIT students can log in."); // Ensure alert is shown first
+            signOut().then(() => router.push("/"));
+          }, 100); // Short delay to allow the alert to appear
         }
       }
     }
   }, [isSignedIn, isLoaded, user, router, signOut]);
 
-  if (!isLoaded) return null; // Prevent rendering before auth loads
+  if (!isLoaded) return null; // Wait for auth to load
 
   const isLocalhost =
     typeof window !== "undefined" && window.location.hostname === "localhost";
+
+  if (
+    isSignedIn &&
+    user &&
+    !user.primaryEmailAddress?.emailAddress.endsWith("@viit.ac.in")
+  ) {
+    alert("Access Denied: Only VIIT students can log in.");
+    signOut().then(() => router.push("/"));
+
+    return null; // Prevent unauthorized access before useEffect executes
+  }
 
   return isLocalhost ||
     (isSignedIn &&
